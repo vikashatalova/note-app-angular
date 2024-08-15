@@ -1,0 +1,13 @@
+:host {
+    display: flex;
+    box-sizing: border-box;
+    height: 100vh;
+
+    // component inserted by angular router
+    ::ng-deep {
+        > :not(router-outlet):not(app-menu) {
+            flex-grow: 1;
+            min-height: 0;
+        }
+    }
+}

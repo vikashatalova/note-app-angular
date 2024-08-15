@@ -1,0 +1,27 @@
+<div class="home">
+    <div class="home__container" *ngFor="let item of buttonItems; let i = index">
+        <div class="home__category" [ngStyle]="{'background': item.color}"></div>
+        
+        <div class="home__content" *ngIf="this.buttonItems!.length > 0; else noItem">
+            <div class="home__row">
+                <h3 class="home__title">{{item.title}}</h3>
+                <div class="home__buttons">
+                    <button class="home__delete" (click)="delFromLocalSt(item, i)">
+                        <i class="fi fi-rr-trash"></i>
+                    </button>
+                    <button class="home__favorite" (click)="addFavorite(item, i)">
+                        <i class="fi fi-rs-heart"></i>
+                    </button>
+                    <!-- <button (click)="clear()">Очистить хранилище</button> -->
+                </div>
+            </div>
+            <ul class="home__list">
+                <li class="home__item">{{item.description}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div *ngIf="this.buttonItems!.length === 0">Список пуст</div>
+<ng-template #noItem>
+    <div>Список пуст</div>
+</ng-template>

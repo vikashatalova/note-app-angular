@@ -1,0 +1,113 @@
+<app-view>
+    <div class="main-page">
+        <div class="filters">
+            <!-- <div class="filters__first">
+                <button class="filters__add-note">+</button>
+            </div> -->
+            <form [formGroup]="createNewItemForm">
+                <div class="text-field">
+                    <label class="text-field__label" for="title">Введите название заголовка</label>
+                    <input 
+                        class="text-field__input" 
+                        type="text" 
+                        name="title" 
+                        id="title" 
+                        placeholder="Название" 
+                        formControlName="title"
+                    >
+                    <small 
+                        *ngIf="!createNewItemForm.controls.title.valid && createNewItemForm.controls.title.touched" 
+                        style="color: red;"
+                    >
+                        Это поле обязательно для заполнения
+                    </small>
+                </div>
+                <div class="text-field">
+                    <label class="text-field__label" for="description">Введите описание</label>
+                    <input 
+                        class="text-field__input" 
+                        type="text" 
+                        name="description" 
+                        id="description" 
+                        placeholder="Описание" 
+                        formControlName="description"
+                    />
+                    <small 
+                        *ngIf="!createNewItemForm.controls.description.valid && createNewItemForm.controls.description.touched" 
+                        style="color: red;"
+                    >
+                        Это поле обязательно для заполнения
+                    </small>
+                </div>
+                <div class="text-field">
+                    <label class="text-field__label" for="category">Название категории</label>
+                    <input 
+                        class="text-field__input" 
+                        type="text" 
+                        name="category" 
+                        id="category" 
+                        placeholder="Категория" 
+                        formControlName="category"
+                    />
+                    <small 
+                        *ngIf="!createNewItemForm.controls.category.valid && createNewItemForm.controls.category.touched" 
+                        style="color: red;"
+                    >
+                        Это поле обязательно для заполнения
+                    </small>
+                </div>
+                <div class="choose-color">
+                    <button 
+                        class="choose-color__btn" 
+                        (click)="isVisible = !isVisible"
+                    >
+                        Выбрать цвет
+                    </button>
+                    <div *ngIf="isVisible" class="choose-color__panel">
+                        <color-sketch (onChange)="handleChangeComplete($event)"></color-sketch>
+                    </div>
+                </div>
+                
+                <button 
+                    class="add-note"
+                    [disabled]="!createNewItemForm.valid"
+                    (click)="handleValue()"
+                >
+                    Добавить новую запись
+                </button>
+            </form>
+            <!-- <form [formGroup]="selectCategoriesForm">
+                    <label for="">Выберите категорию</label>
+                    <select 
+                        formControlName="category"
+                    >
+                        <option 
+                            *ngFor="let category of categories"
+                            [value]="category" 
+                        >
+                            {{category}}
+                        </option>
+                    </select>
+                </form> -->
+            <!-- array for sort -->
+            <div class="filters__buttons">
+                <button 
+                    class="filters__sort-btn"
+                    *ngFor="let category of categories"
+                    [ngStyle]="{'background': category.color}"
+                    (click)="getDataSelect(category)"
+                >
+                    {{category.name}}
+                </button>
+            </div>
+        </div>
+        
+        <div *ngIf="buttonItems">
+            <app-cards-list-item 
+                [buttonItems]="buttonItems"
+                [actionType]="'all'"
+            >
+            </app-cards-list-item>
+        </div>
+    </div>
+</app-view>

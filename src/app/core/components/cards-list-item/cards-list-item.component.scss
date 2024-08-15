@@ -1,0 +1,84 @@
+.home {
+    &__container {
+       display: flex;
+       background-color: #fff;
+
+        &:not(:last-child) {
+            margin-bottom: 24px;
+        }
+    }
+
+    &__content {
+        flex: 1;
+        padding: 16px;
+    }
+
+    &__category {
+        width: 30px;
+
+        &-shop {
+            background-color: #50BACB;
+        }
+
+        &-bus {
+            background-color: #EA79B5;
+        }
+
+        &-other {
+            background-color: #E18D61;
+        }
+    }
+
+    &__row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    &__title {
+        font-size: 28px;
+    }
+
+    &__buttons {
+        display: flex;
+    }
+
+    &__delete {
+        border-radius: 50px;
+        color: #fff;
+        border: none;
+        background-color: #50BACB;
+        margin-right: 15px;
+        width: 40px;
+        height: 40px;
+        position: relative;
+
+        i {
+            font-size: 24px;
+            transform: translate(0, -50%);
+            position: absolute;
+            top: 50%;
+            left: 19%;
+        }
+    }
+
+    &__favorite {
+        border-radius: 50px;
+        color: #fff;
+        border: none;
+        font-size: 18px;
+        line-height: normal;
+        background-color: #50BACB;
+        width: 40px;
+        height: 40px;
+        position: relative;
+
+        i {
+            font-size: 24px;
+            transform: translate(0, -50%);
+            position: absolute;
+            top: 58%;
+            left: 19%;
+        }
+    }
+}
