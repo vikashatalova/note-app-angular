@@ -10,6 +10,10 @@ const routes: Routes = [
         loadChildren: () => import('./views/home-view/home-view.module').then(m => m.HomeViewModule)
       },
       {
+        path: 'note/:id',
+        loadChildren: () => import('./core/components/cards/cards.module').then(m => m.CardsModule)
+      },
+      {
         path: 'deleted',
         loadChildren: () => import('./views/deleted-view/deleted-view.module').then(m => m.DeletedViewModule)
       },

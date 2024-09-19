@@ -1,0 +1,39 @@
+<app-view>
+    <ng-container *ngIf="filteredItems !== undefined; else error">
+        <div class="card-list-item">
+            <form [formGroup]="updateData">
+                <div class="card-list-item__title-block">
+                    <h3 class="card-list-item__text">Title</h3>
+                    <p *ngIf="!isEditing"  (click)="enableEditing()">
+                        {{filteredItems.title}}
+                    </p>
+                    <input 
+                        *ngIf="isEditing"
+                        [value]="filteredItems.title" 
+                        (blur)="saveTitle($event)"
+                        formControlName="title"
+                    />
+                </div>
+                <!-- <h1 id="title" (click)="handleAction($event)"></h1> -->
+                <!-- <div class="card-list-item__description-block">
+                    <h3 class="card-list-item__text">Description</h3>
+                    <p 
+                        *ngIf="!isEditing" 
+                        (click)="enableEditing()" 
+                    >
+                        {{filteredItems.description}}
+                    </p>
+                    <input 
+                        *ngIf="isEditing"
+                        [value]="filteredItems.description" 
+                        (blur)="saveTitle($event)"
+                        formControlName="description"
+                    />
+                </div> -->
+            </form>
+        </div>
+    </ng-container>
+</app-view>
+<ng-template #error>
+    <p>Что-то пошло не так</p>
+</ng-template>

@@ -1,22 +1,19 @@
+import { ViewModule } from './../view/view.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { MenuComponent } from './menu.component';
+import { CardListItemComponent } from './card-list-item.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 
 @NgModule({
     declarations: [
-        MenuComponent
+        CardListItemComponent
     ],
     imports: [
         CommonModule,
-        RouterModule,
+        ViewModule,
         FormsModule,
         ReactiveFormsModule,
     ],
-    exports: [
-        MenuComponent
-    ]
+    exports: [CardListItemComponent]
 })
-export class MenuModule {}
+export class CardsListItemModule {}

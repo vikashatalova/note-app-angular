@@ -1,5 +1,9 @@
 <div class="home">
-    <div class="home__container" *ngFor="let item of buttonItems; let i = index">
+    <div 
+        class="home__container" 
+        *ngFor="let item of buttonItems; let i = index"
+        [routerLink]="['/note', item.id]"
+    >
         <div class="home__category" [ngStyle]="{'background': item.color}"></div>
         
         <div class="home__content" *ngIf="this.buttonItems!.length > 0; else noItem">
@@ -10,8 +14,10 @@
                         <i class="fi fi-rr-trash"></i>
                     </button>
                     <button class="home__favorite" (click)="addFavorite(item, i)">
-                        <i class="fi fi-rs-heart"></i>
+                        <i [class]="isFavorite || favoriteIcon ? 'fi fi-sr-heart' : 'fi fi-rr-heart'"></i>
+                        <!-- {{item ? <i class="fi fi-sr-heart"></i> : <i class="fi fi-rr-heart"></i>}} -->
                     </button>
+                    <!-- {{isFavorite}}{{favoriteIcon}} -->
                     <!-- <button (click)="clear()">Очистить хранилище</button> -->
                 </div>
             </div>

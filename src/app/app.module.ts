@@ -1,4 +1,4 @@
-import { CardsListItemModule } from 'src/app/core/components/cards-list-item/cards-list-item.module';
+import { CardsListModule } from 'src/app/core/components/cards-list/cards-list.module';
 import { FavoriteViewModule } from './views/favorite-view/favorite-view.module';
 import { ViewModule } from './core/components/view/view.module';
 import { ShellModule } from './core/components/shell/shell.module';
@@ -27,7 +27,7 @@ import { DeletedViewModule } from './views/deleted-view/deleted-view.module';
     HomeViewModule,
     DeletedViewModule,
     FavoriteViewModule,
-    CardsListItemModule
+    CardsListModule
   ],
   providers: [],
   bootstrap: [AppComponent]

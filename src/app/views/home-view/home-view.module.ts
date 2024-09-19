@@ -4,7 +4,7 @@ import { HomeViewComponent } from './home-view.component';
 import { HomeViewRoutingModule } from './home-view-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ViewModule } from './../../core/components/view/view.module';
-import { CardsListItemModule } from 'src/app/core/components/cards-list-item/cards-list-item.module';
+import { CardsListModule } from 'src/app/core/components/cards-list/cards-list.module';
 import { ColorSketchModule } from 'ngx-color/sketch';
 
 @NgModule({
@@ -18,7 +18,7 @@ import { ColorSketchModule } from 'ngx-color/sketch';
         ReactiveFormsModule,
         CommonModule,
         ViewModule,
-        CardsListItemModule,
+        CardsListModule,
         ColorSketchModule
     ],
     schemas: []

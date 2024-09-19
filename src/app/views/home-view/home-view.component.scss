@@ -14,11 +14,16 @@
         border-radius: 50px;
         background-color: #50BACB;
         color: #fff;
-        font-size: 40px;
+        font-size: 24px;
         display: flex;
         align-items: center;
         justify-content: center;
         border: none;
+        cursor: pointer;
+    }
+
+    &__form {
+        transition: all 1s;
     }
 
     &__buttons {
@@ -101,6 +106,10 @@ select {
     color: #fff;
     border: none;
     border-radius: 0.25rem;
+
+    &_disabled {
+        background-color: #5a5a5a !important;
+    }
 }
 
 .text-field {

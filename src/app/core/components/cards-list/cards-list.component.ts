@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges } from '@angular/core';
+import { Router } from '@angular/router';
 
 interface ButtonItems {
     id: string,
@@ -9,18 +10,24 @@ interface ButtonItems {
 }
 
 @Component({
-    selector: 'app-cards-list-item',
-    templateUrl: './cards-list-item.component.html',
-    styleUrls: ['./cards-list-item.component.scss'],
+    selector: 'app-cards-list',
+    templateUrl: './cards-list.component.html',
+    styleUrls: ['./cards-list.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class CardsListItemComponent implements OnInit{
+export class CardsListComponent implements OnInit{
     @Input() buttonItems: ButtonItems[] = [];
     @Input() actionType: string = '';
+    @Input() favoriteIcon: boolean = false;
 
     public deletedButtonItems: ButtonItems[] = [];
     public favoriteButtonItems: ButtonItems[] = [];
+    public isFavorite: boolean = false;
+
+    constructor (
+        private router: Router
+    ) {}
 
     ngOnInit() {
         const deletedItemsData = localStorage.getItem('deletedItems');
@@ -104,13 +111,11 @@ export class CardsListItemComponent implements OnInit{
 
         if (findEL) {
             if (targetKey) {
-                // 1. Add item to new storage
                 const targetItems = JSON.parse(this.getKeyStorage(targetKey) || '[]');
                 targetItems.push(item);
                 this.updateLocalSt(targetKey, targetItems);
             }
         
-            // 2. Remove item from current storage
             this.buttonItems.splice(index, 1);
             this.updateLocalSt(sourceKey, this.buttonItems);
         } else {
@@ -122,32 +127,42 @@ export class CardsListItemComponent implements OnInit{
         return localStorage.getItem(key);
     }
 
-    permamentDelete (item: any) {
-        // this.buttonItems?.splice(index, 1);
-    }
-
     clear() {
         localStorage.clear();
     }
 
     addFavorite(item: any, index: number) {
+        console.log(item);
+        this.isFavorite = item !== null ? true : false;
+        console.log(this.isFavorite);
+        if (this.favoriteIcon) {
+            console.log('мы в избранном и кликнули на сердце');
+            this.isFavorite = false;
+        } else {
+            console.log('что-то пошло не так');
+        }
+        
         const storedData = localStorage.getItem('buttonItems');
         this.buttonItems = JSON.parse(storedData!);
-        const findEL = this.buttonItems!.find((buttonItem: any) => buttonItem.id === item.id);        
+        console.log(this.buttonItems);
+        
+        const findEL = this.buttonItems!.find((buttonItem: any) => buttonItem.id === item.id);  
+        console.log(findEL);
+              
 
-        if (findEL) {
-            // 1 добавить удаленный массив в новый массив
-            this.favoriteButtonItems.push(item);
+        // if (findEL) {
+        //     // 1 добавить удаленный массив в новый массив
+        //     this.favoriteButtonItems.push(item);
 
-            // 2 сохранить в новом хранилище
-            this.saveFavoriteButtons();
+        //     // 2 сохранить в новом хранилище
+        //     this.saveFavoriteButtons();
             
-            // 3 удалить из старого хранилища
-            this.buttonItems?.splice(index, 1);
-            this.saveNewItem(this.buttonItems);
-        } else {
-            console.log('не получилось удалить запись');
-        }
+        //     // 3 удалить из старого хранилища
+        //     this.buttonItems?.splice(index, 1);
+        //     this.saveNewItem(this.buttonItems);
+        // } else {
+        //     console.log('не получилось удалить запись');
+        // }
     }
 
     public saveDeletedButtons() {

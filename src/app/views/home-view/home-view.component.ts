@@ -11,7 +11,8 @@ interface ButtonItems {
 
 interface CategoryItems {
     name: string | null,
-    color: string | null
+    color: string | null,
+    isActive: boolean
 }
 
 @Component({
@@ -40,15 +41,12 @@ export class HomeViewComponent implements OnInit {
     public selectCategoriesForm = new FormGroup({
         category: new FormControl('', [])
     });
-    public categories: CategoryItems[] = [
-        {name: 'shopping', color:'#50BACB'}, 
-        {name: 'bussines', color: '#EA79B5'}, 
-        {name: 'other thing', color: '#E18D61'}
-    ];
+    public categories: CategoryItems[] = [];
     public selectedOption?: string;
     public color: string = '#ff0000';
     public isVisible: boolean = false;
     public isVisibleForm: boolean = false;
+    public errors: boolean = false;
 
     constructor(
         private readonly _changeDetectorRef: ChangeDetectorRef,
@@ -58,17 +56,23 @@ export class HomeViewComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadDataFromLocalStorage();
+
+        this.setErrors();
     }
 
     handleChangeComplete($event: any) {
         this.color = $event.color.hex;
-        console.log('Selected color:', this.color);
     }
 
     getDataSelect(selectedValue: string | any) {
-        this.selectedOption = selectedValue;
-
-        this.buttonItems = this.copyButtonItems?.filter(item => item.category === this.selectedOption);
+        this.buttonItems = this.copyButtonItems?.filter(item => {
+            let check = (item.category)?.includes(selectedValue.name);
+            console.log(check);
+            
+            // selectedValue.name === item.category
+            // this.copyButtonItems?.includes(item.category);
+        });
+        
     }
 
     public saveDeletedButtons() {
@@ -91,7 +95,8 @@ export class HomeViewComponent implements OnInit {
 
             const newCategoryItem: CategoryItems = {
                 name: this.createNewItemForm.controls.category.value,
-                color: this.color
+                color: this.color,
+                isActive: true
             }
 
             this.buttonItems = [...this.buttonItems!, newItem];
@@ -100,17 +105,13 @@ export class HomeViewComponent implements OnInit {
             this.categories.push(newCategoryItem);        
             this.saveNewCategories(this.categories);
 
+            if (this.buttonItems && this.categories) {
+                this.createNewItemForm.reset();
+                this.isVisible = false;
+            }
+
             this._changeDetectorRef.detectChanges(); 
         })
-    }
-
-    handleValue() {
-        // forms
-        if (this.createNewItemForm.valid) {
-            console.log('form valid');
-        } else {
-            console.log('form not valid');
-        }
     }
 
     public saveNewItem(item: any) {
@@ -124,8 +125,6 @@ export class HomeViewComponent implements OnInit {
     public loadDataFromLocalStorage() {
         const storedData = localStorage.getItem('buttonItems');
         this.buttonItems = storedData ? JSON.parse(storedData) : [];
-
-        console.log('buttonItems',storedData);
 
         const deletedItemsData = localStorage.getItem('deletedItems');
         this.deletedButtonItems = deletedItemsData ? JSON.parse(deletedItemsData) : [];
@@ -143,26 +142,20 @@ export class HomeViewComponent implements OnInit {
         return Math.random().toString(36).substr(2, 9);
     }
 
-    private getDefaultData(): any[] {
-        return [
-            {
-                id: '1',
-                title: 'Lorem, ipsum dolor1',
-                description: 'Lorem ipsum dolor sit amet.',
-                category: 'shopping'
-            },
-            {
-                id: '2',
-                title: 'Lorem, ipsum dolor2',
-                description: 'Lorem ipsum dolor sit amet.',
-                category: 'bussines'
-            },
-            {
-                id: '3',
-                title: 'Lorem, ipsum dolor3',
-                description: 'Lorem ipsum dolor sit amet.',
-                category: 'shopping'
-            },
-        ]
+    private setErrors() {
+        for (const category of this.categories) {
+            this.createNewItemForm.controls.category.valueChanges.subscribe(value => {
+                if (value === category.name) {
+                    this.createNewItemForm.setErrors({'incorrect': true});
+                    this.createNewItemForm.updateValueAndValidity();
+                    this.errors = true;
+                    console.log('одинаколвые названия категорий');
+                } else {
+                    this.errors = false;
+                    this.createNewItemForm.updateValueAndValidity();
+                    console.log('нет совпадения');
+                }
+            })
+        }
     }
 }

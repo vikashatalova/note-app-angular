@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FavoriteViewRoutingModule } from './favorite-view-routing.module';
-import { CardsListItemModule } from 'src/app/core/components/cards-list-item/cards-list-item.module';
+import { CardsListModule } from 'src/app/core/components/cards-list/cards-list.module';
 
 
 @NgModule({
@@ -18,7 +18,7 @@ import { CardsListItemModule } from 'src/app/core/components/cards-list-item/car
         ReactiveFormsModule,
         CommonModule,
         ViewModule,
-        CardsListItemModule
+        CardsListModule
     ]
 })
 export class FavoriteViewModule {}
