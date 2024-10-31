@@ -3,16 +3,16 @@ import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms'
 
 interface ButtonItems {
     id: string,
-    title: string | null,
-    description: string | null,
-    category: string | null,
-    color: string | null
-}
-
-interface CategoryItems {
-    name: string | null,
-    color: string | null,
-    isActive: boolean
+    title?: string | null,
+    description?: string | null,
+    categories: {
+        category: {
+            name?: string | null,
+            color?: string | null,
+            isActive?: boolean | undefined
+        }
+    },
+    isFavorite?: boolean | undefined
 }
 
 @Component({
@@ -22,6 +22,7 @@ interface CategoryItems {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeViewComponent implements OnInit {
+    // убрать/заменить полностью buttonItems
     public buttonItems?: ButtonItems[];
     public copyButtonItems?: ButtonItems[];
     public deletedButtonItems: ButtonItems[] = [];
@@ -38,15 +39,12 @@ export class HomeViewComponent implements OnInit {
             [Validators.required]
         )
     })
-    public selectCategoriesForm = new FormGroup({
-        category: new FormControl('', [])
-    });
-    public categories: CategoryItems[] = [];
-    public selectedOption?: string;
+
     public color: string = '#ff0000';
     public isVisible: boolean = false;
     public isVisibleForm: boolean = false;
     public errors: boolean = false;
+    filteredCategories: any[] = [];  // Массив уникальных категорий
 
     constructor(
         private readonly _changeDetectorRef: ChangeDetectorRef,
@@ -65,47 +63,31 @@ export class HomeViewComponent implements OnInit {
     }
 
     getDataSelect(selectedValue: string | any) {
-        this.buttonItems = this.copyButtonItems?.filter(item => {
-            let check = (item.category)?.includes(selectedValue.name);
-            console.log(check);
-            
-            // selectedValue.name === item.category
-            // this.copyButtonItems?.includes(item.category);
-        });
+        console.log(selectedValue);
         
-    }
-
-    public saveDeletedButtons() {
-        localStorage.setItem('deletedItems', JSON.stringify(this.deletedButtonItems));
-    }
-
-    public saveFavoriteButtons() {
-        localStorage.setItem('favoriteItems', JSON.stringify(this.favoriteButtonItems));
+        // this.buttonItems = this.copyButtonItems?.filter(item => {
+        //     return (item.categories.category.name)?.includes(selectedValue.name);
+        // });
     }
 
     public addNote() {
         this.ngZone.run(() => {
-           const newItem: ButtonItems = {
+            const item: ButtonItems = {
                 id: this.generateId(),
                 title: this.createNewItemForm.controls.title.value,
                 description: this.createNewItemForm.controls.description.value,
-                category: this.createNewItemForm.controls.category.value,
-                color: this.color
+                categories: {
+                    category: {
+                        name: this.createNewItemForm.controls.category.value,
+                        color: this.color,
+                    }
+                },
             }
 
-            const newCategoryItem: CategoryItems = {
-                name: this.createNewItemForm.controls.category.value,
-                color: this.color,
-                isActive: true
-            }
-
-            this.buttonItems = [...this.buttonItems!, newItem];
+            this.buttonItems = [...this.buttonItems!, item];
             this.saveNewItem(this.buttonItems);
 
-            this.categories.push(newCategoryItem);        
-            this.saveNewCategories(this.categories);
-
-            if (this.buttonItems && this.categories) {
+            if (this.buttonItems) {
                 this.createNewItemForm.reset();
                 this.isVisible = false;
             }
@@ -114,12 +96,13 @@ export class HomeViewComponent implements OnInit {
         })
     }
 
+    onCardDeleted(deletedItem: any) {
+        this.buttonItems = this.buttonItems?.filter(item => item.id !== deletedItem.id);
+    }
+    
+
     public saveNewItem(item: any) {
         localStorage.setItem('buttonItems', JSON.stringify(item));
-    }
-
-    public saveNewCategories(item: any) {
-        localStorage.setItem('categories', JSON.stringify(item));
     }
 
     public loadDataFromLocalStorage() {
@@ -132,9 +115,6 @@ export class HomeViewComponent implements OnInit {
         const favoriteItemsData = localStorage.getItem('favoriteItems');
         this.favoriteButtonItems = favoriteItemsData ? JSON.parse(favoriteItemsData) : [];
 
-        const categoriesItemsData = localStorage.getItem('categories');
-        this.categories = categoriesItemsData ? JSON.parse(categoriesItemsData) : this.categories;
-
         this.copyButtonItems = [...this.buttonItems!];
     }
 
@@ -143,13 +123,13 @@ export class HomeViewComponent implements OnInit {
     }
 
     private setErrors() {
-        for (const category of this.categories) {
+        for (const item of this.buttonItems!) {
             this.createNewItemForm.controls.category.valueChanges.subscribe(value => {
-                if (value === category.name) {
+                if (value === item.categories.category.name) {
                     this.createNewItemForm.setErrors({'incorrect': true});
                     this.createNewItemForm.updateValueAndValidity();
                     this.errors = true;
-                    console.log('одинаколвые названия категорий');
+                    console.log('одинаковые названия категорий');
                 } else {
                     this.errors = false;
                     this.createNewItemForm.updateValueAndValidity();

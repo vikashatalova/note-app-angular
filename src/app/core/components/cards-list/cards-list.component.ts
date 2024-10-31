@@ -1,12 +1,18 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 
 interface ButtonItems {
     id: string,
-    title: string | null,
-    description: string | null,
-    category: string | null,
-    color: string | null
+    title?: string | null,
+    description?: string | null,
+    categories: {
+        category: {
+            name?: string | null,
+            color?: string | null,
+            isActive?: boolean | undefined
+        }
+    },
+    isFavorite?: boolean | undefined
 }
 
 @Component({
@@ -20,13 +26,15 @@ export class CardsListComponent implements OnInit{
     @Input() buttonItems: ButtonItems[] = [];
     @Input() actionType: string = '';
     @Input() favoriteIcon: boolean = false;
+    @Output() cardDeleted = new EventEmitter<any>();
 
     public deletedButtonItems: ButtonItems[] = [];
     public favoriteButtonItems: ButtonItems[] = [];
     public isFavorite: boolean = false;
 
     constructor (
-        private router: Router
+        private router: Router,
+        private cdr: ChangeDetectorRef
     ) {}
 
     ngOnInit() {
@@ -102,6 +110,8 @@ export class CardsListComponent implements OnInit{
             default:
             console.log('Unknown action type');
         }
+
+        this.cardDeleted.emit(item);
     }
 
     handleItemAction(item: any, index: number, sourceKey: string, targetKey?: string) {
@@ -113,11 +123,15 @@ export class CardsListComponent implements OnInit{
             if (targetKey) {
                 const targetItems = JSON.parse(this.getKeyStorage(targetKey) || '[]');
                 targetItems.push(item);
+                
                 this.updateLocalSt(targetKey, targetItems);
             }
         
             this.buttonItems.splice(index, 1);
+
+            this.buttonItems = [...this.buttonItems]
             this.updateLocalSt(sourceKey, this.buttonItems);
+            this.cdr.detectChanges();
         } else {
             console.log('Item not found');
         }

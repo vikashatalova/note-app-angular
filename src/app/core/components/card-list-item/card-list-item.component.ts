@@ -4,10 +4,16 @@ import { ActivatedRoute, ParamMap } from "@angular/router";
 
 interface ButtonItems {
     id: string,
-    title: string | null,
-    description: string | null,
-    category: string | null,
-    color: string | null
+    title?: string | null,
+    description?: string | null,
+    categories: {
+        category: {
+            name?: string | null,
+            color?: string | null,
+            isActive?: boolean | undefined
+        }
+    },
+    isFavorite?: boolean | undefined
 }
 
 @Component({
@@ -85,13 +91,14 @@ export class CardListItemComponent implements OnInit {
             console.log('если заголовок менялся');
         }
 
-        const newTitle: ButtonItems = {
-            title: this.filteredItems.title,
-            category: this.filteredItems.category,
-            color: this.filteredItems.color,
-            description: this.filteredItems.description,
-            id: this.filteredItems.id
-        }
+        // rewrite
+        // const newTitle: ButtonItems = {
+        //     title: this.filteredItems.title,
+        //     category: this.filteredItems.category,
+        //     color: this.filteredItems.color,
+        //     description: this.filteredItems.description,
+        //     id: this.filteredItems.id
+        // }
         // console.log(newTitle);
         // если значение никак не менялось то выйти из режима редактирования
         

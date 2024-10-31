@@ -4,10 +4,16 @@ import { Subject, tap, takeUntil } from 'rxjs';
 
 interface ButtonItems {
     id: string,
-    title: string | null,
-    description: string | null,
-    category: string | null,
-    color: string | null
+    title?: string | null,
+    description?: string | null,
+    categories: {
+        category: {
+            name?: string | null,
+            color?: string | null,
+            isActive?: boolean | undefined
+        }
+    },
+    isFavorite?: boolean | undefined
 }
 
 @Component({
@@ -36,6 +42,5 @@ export class MenuComponent implements OnInit {
         const inputElement = (event.target as HTMLInputElement).value;
         
         this.copyButtonItems = this.buttonItems!.filter((el) => el.title!.toLowerCase().indexOf(inputElement.toLowerCase()) >= 0)
-        console.log('copyButtonItems',this.copyButtonItems);
     }
 }

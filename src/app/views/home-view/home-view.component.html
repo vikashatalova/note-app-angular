@@ -105,11 +105,11 @@
             <div class="filters__buttons">
                 <button 
                     class="filters__sort-btn"
-                    *ngFor="let category of categories"
-                    [ngStyle]="{'background': category.color}"
-                    (click)="getDataSelect(category)"
+                    *ngFor="let item of buttonItems"
+                    [ngStyle]="{'background': item.categories.category.color}"
+                    (click)="getDataSelect(item)"
                 >
-                    {{category.name}}
+                    {{item.categories.category.name}}
                 </button>
             </div>
         </div>
@@ -118,6 +118,7 @@
             <app-cards-list 
                 [buttonItems]="buttonItems"
                 [actionType]="'all'"
+                (cardDeleted)="onCardDeleted($event)"
             >
             </app-cards-list>
         </div>

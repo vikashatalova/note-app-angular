@@ -2,10 +2,16 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 interface FavoriteButtonItems {
     id: string,
-    title: string | null,
-    description: string | null,
-    category: string | null,
-    color: string | null
+    title?: string | null,
+    description?: string | null,
+    categories: {
+        category: {
+            name?: string | null,
+            color?: string | null,
+            isActive?: boolean | undefined
+        }
+    },
+    isFavorite?: boolean | undefined
 }
 
 @Component({
