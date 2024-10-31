@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, tap } from 'rxjs';
+import { NotesService } from 'src/app/core/services/items.service';
 
 interface DeletedButtonItems {
     id: string,
@@ -20,22 +22,38 @@ interface DeletedButtonItems {
     styleUrls: ['./deleted-view.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeletedViewComponent implements OnInit {
+export class DeletedViewComponent implements OnInit, OnDestroy {
     public deletedButtonItems: DeletedButtonItems[] = [];
+    public selectTab = 'deleted';
+
+    private readonly _destroy$ = new Subject<void>();
+
+    constructor(
+        private _notes: NotesService,
+        private _cdr: ChangeDetectorRef
+    ) {}
 
     ngOnInit() {
         if (this.deletedButtonItems) {
-            this.loadDataFromLocalStorage();
+            this.deletedButtonItems = this._notes.getDeletedNoteItems();
         }
+
+        this._notes.searchNotes('', 'deletedItems');
+
+        this._notes.filteredNotes$.pipe(
+            tap(deletedNotes => {
+                console.log('deletedNotes', deletedNotes);
+                
+                this.deletedButtonItems = deletedNotes;
+                console.log(this.deletedButtonItems);
+                
+                this._cdr.markForCheck();
+            })
+        ).subscribe()
     }
 
-    public loadDataFromLocalStorage() {
-        const storedData = localStorage.getItem('deletedItems');
-        if (storedData) {
-            this.deletedButtonItems = JSON.parse(storedData);
-        } else {
-            // this.deletedButtonItems = [];
-            console.log('this.deletedButtonItems = []');
-        }
+    ngOnDestroy() {
+        this._destroy$.next();
+        this._destroy$.complete();
     }
 }

@@ -1,6 +1,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnChanges, OnInit, Renderer2, SimpleChanges } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { ActivatedRoute, ParamMap } from "@angular/router";
+import { NotesService } from "../../services/items.service";
 
 interface ButtonItems {
     id: string,
@@ -46,7 +47,8 @@ export class CardListItemComponent implements OnInit {
     constructor (
         private route: ActivatedRoute , 
         private elem: ElementRef, 
-        private renderer: Renderer2
+        private renderer: Renderer2,
+        private _notes: NotesService
     ) { }
 
     ngOnInit(): void {        
@@ -106,13 +108,8 @@ export class CardListItemComponent implements OnInit {
     }
 
     loadDataFromLocalSt() {
-        const storedData = localStorage.getItem('buttonItems');
-        this.buttonItems = storedData ? JSON.parse(storedData) : [];
-
-        const deletedItemsData = localStorage.getItem('deletedItems');
-        this.deletedButtonItems = deletedItemsData ? JSON.parse(deletedItemsData) : [];
-
-        const favoriteItemsData = localStorage.getItem('favoriteItems');
-        this.favoriteButtonItems = favoriteItemsData ? JSON.parse(favoriteItemsData) : [];
+        this.buttonItems = this._notes.getNoteItems();
+        this.deletedButtonItems = this._notes.getDeletedNoteItems();
+        this.favoriteButtonItems = this._notes.getFavoriteNoteItems();
     }
 }

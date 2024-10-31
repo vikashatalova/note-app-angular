@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { NotesService } from 'src/app/core/services/items.service';
 
 interface FavoriteButtonItems {
     id: string,
@@ -23,18 +24,11 @@ interface FavoriteButtonItems {
 export class FavoriteViewComponent implements OnInit {
     public favoriteButtonItems: FavoriteButtonItems[] = [];
 
+    constructor(private _notes: NotesService) {}
+
     ngOnInit() {
         if (this.favoriteButtonItems) {
-            this.loadDataFromLocalStorage();
-        }
-    }
-
-    public loadDataFromLocalStorage() {
-        const storedData = localStorage.getItem('favoriteItems');
-        if (storedData) {
-            this.favoriteButtonItems = JSON.parse(storedData);
-        } else {
-            this.favoriteButtonItems = [];
+            this.favoriteButtonItems = this._notes.getFavoriteNoteItems();
         }
     }
 }

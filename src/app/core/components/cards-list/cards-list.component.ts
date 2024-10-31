@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
+import { NotesService } from '../../services/items.service';
+import { LocalStorageService } from '../../services/local-storage.service';
 
 interface ButtonItems {
     id: string,
@@ -34,7 +36,9 @@ export class CardsListComponent implements OnInit{
 
     constructor (
         private router: Router,
-        private cdr: ChangeDetectorRef
+        private cdr: ChangeDetectorRef,
+        private _notes: NotesService,
+        private _lc: LocalStorageService
     ) {}
 
     ngOnInit() {
@@ -43,6 +47,7 @@ export class CardsListComponent implements OnInit{
 
         const favoriteItemsData = localStorage.getItem('favoriteItems');
         this.favoriteButtonItems = favoriteItemsData ? JSON.parse(favoriteItemsData) : [];
+
     }
 
     // delFromLocalSt(item: any, index: number) {
@@ -139,10 +144,6 @@ export class CardsListComponent implements OnInit{
 
     getKeyStorage(key: string) {
         return localStorage.getItem(key);
-    }
-
-    clear() {
-        localStorage.clear();
     }
 
     addFavorite(item: any, index: number) {
